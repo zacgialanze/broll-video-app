@@ -7,7 +7,7 @@ st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"] {
-        background-image: url('assets/background.png');
+        background-image: url('/static/background.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
