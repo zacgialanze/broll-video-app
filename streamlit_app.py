@@ -14,7 +14,7 @@ st.markdown(f"""
     [data-testid="stAppViewContainer"] {{
         background-image: url("data:image/png;base64,{encoded}");
         background-size: cover;
-        background-position: center top 73%;
+        background-position: 40% top 60%;
         background-repeat: no-repeat;
     }}
 
@@ -80,8 +80,8 @@ st.markdown(f"""
 st.title("🎬 101VideoGenerator App 1.0")
 
 topic = st.text_input("Enter topic", "fish")
-duration = st.slider("Total duration (seconds)", 10, 1000, 30)  # Max duration now 1000s
-clips = st.slider("Number of clips", 1, 100, 5)  # Max clips now 100
+duration = st.slider("Total duration (seconds)", 10, 1000, 30)
+clips = st.slider("Number of clips", 1, 100, 5)
 aspect = st.selectbox("Aspect ratio", ["16:9", "1:1", "9:16"])
 
 if st.button("Generate Video"):
