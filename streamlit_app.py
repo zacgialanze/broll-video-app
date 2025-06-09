@@ -8,13 +8,13 @@ st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 with open("static/background.png", "rb") as image_file:
     encoded = base64.b64encode(image_file.read()).decode()
 
-# --- Inject custom CSS with precisely calculated offsets ---
+# --- Inject custom CSS ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
         background-image: url("data:image/png;base64,{encoded}");
-        background-size: cover;
-        background-position: 44% 35%;
+        background-size: 130%;
+        background-position: 40% 30%;
         background-repeat: no-repeat;
     }}
 
