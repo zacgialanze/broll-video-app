@@ -50,10 +50,15 @@ def download_giphy_videos(query, count):
     return clips
 
 def normalize_clip(input_path, output_path, duration, aspect):
+    vf_filter = {
+        "16:9": "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2",
+        "1:1": "scale=1080:1080:force_original_aspect_ratio=decrease,pad=1080:1080:(ow-iw)/2:(oh-ih)/2",
+        "9:16": "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2"
+    }.get(aspect, "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2")
+
     cmd = [
         "ffmpeg", "-y", "-stream_loop", "-1", "-i", input_path,
-        "-t", str(duration), "-vf",
-        "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2",
+        "-t", str(duration), "-vf", vf_filter,
         "-r", "30", "-pix_fmt", "yuv420p", "-an", output_path
     ]
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
