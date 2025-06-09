@@ -5,14 +5,14 @@ import time
 
 st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 
-# --- Load and encode background and new rider image ---
+# --- Load and encode background and bike image ---
 with open("static/background.png", "rb") as bg:
     bg_encoded = base64.b64encode(bg.read()).decode()
 
 with open("static/bike_rider.png", "rb") as bike:
     bike_encoded = base64.b64encode(bike.read()).decode()
 
-# --- Inject CSS ---
+# --- Inject CSS for background, bike, sparks ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
@@ -43,9 +43,39 @@ st.markdown(f"""
         animation: ride 5s linear infinite;
     }}
 
+    .spark-trail {{
+        position: fixed;
+        bottom: 25px;
+        left: -300px;
+        z-index: 9998;
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle, orange 0%, transparent 70%);
+        border-radius: 50%;
+        box-shadow:
+            5px 0 orange,
+            -5px 0 orange,
+            0 5px orange,
+            0 -5px orange,
+            3px 3px orange,
+            -3px -3px orange;
+        opacity: 0.8;
+        animation: trail 5s linear infinite, flicker 0.1s infinite alternate;
+    }}
+
     @keyframes ride {{
         0% {{ left: -300px; }}
         100% {{ left: 110%; }}
+    }}
+
+    @keyframes trail {{
+        0% {{ left: -330px; }}
+        100% {{ left: 80%; }}
+    }}
+
+    @keyframes flicker {{
+        0% {{ transform: scale(1); opacity: 0.7; }}
+        100% {{ transform: scale(1.2); opacity: 1; }}
     }}
 
     .generating-text {{
@@ -80,11 +110,12 @@ clips = st.slider("Number of clips", 1, 100, 5)
 aspect = st.selectbox("Aspect ratio", ["16:9", "1:1", "9:16"])
 
 if st.button("Generate Video"):
-    # Inject animated rider + text
+    # Inject animated bike + sparks + text
     st.markdown(f"""
         <div class="bike-animation">
             <img src="data:image/png;base64,{bike_encoded}" height="110">
         </div>
+        <div class="spark-trail"></div>
         <div class="generating-text">Generating...</div>
     """, unsafe_allow_html=True)
 
@@ -92,9 +123,13 @@ if st.button("Generate Video"):
         time.sleep(1.5)
         output = make_video(topic, duration, clips, aspect)
 
-    # Remove animation after completion
+    # Hide everything post-generation
     st.markdown(
-        """<style>.bike-animation, .generating-text { display: none !important; }</style>""",
+        """<style>
+        .bike-animation, .spark-trail, .generating-text {{
+            display: none !important;
+        }}
+        </style>""",
         unsafe_allow_html=True
     )
 
