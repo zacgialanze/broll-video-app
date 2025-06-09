@@ -8,13 +8,13 @@ st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 with open("static/background.png", "rb") as image_file:
     encoded = base64.b64encode(image_file.read()).decode()
 
-# --- Inject custom CSS with adjusted background position ---
+# --- Inject custom CSS ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
         background-image: url("data:image/png;base64,{encoded}");
         background-size: cover;
-        background-position: center top 70%;
+        background-position: center top 60%;
         background-repeat: no-repeat;
     }}
 
@@ -40,7 +40,14 @@ st.markdown(f"""
 
     label, .stTextInput label, .stSelectbox label {{
         font-weight: bold;
-        color: white;
+        color: white !important;
+        opacity: 1 !important;
+    }}
+
+    .stSlider label, .stSlider span {{
+        color: white !important;
+        opacity: 1 !important;
+        font-weight: bold;
     }}
 
     .stButton>button {{
@@ -73,7 +80,7 @@ st.markdown(f"""
 st.title("🎬 101VideoGenerator App 1.0")
 
 topic = st.text_input("Enter topic", "fish")
-duration = st.slider("Total duration (seconds)", 10, 120, 30)
+duration = st.slider("Total duration (seconds)", 10, 600, 30)  # Raised max to 600s (10 min)
 clips = st.slider("Number of clips", 1, 10, 5)
 aspect = st.selectbox("Aspect ratio", ["16:9", "1:1", "9:16"])
 
