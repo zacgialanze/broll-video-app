@@ -1,20 +1,24 @@
 import streamlit as st
 from broll_stitcher_core import make_video
 import base64
+import time
 
 st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 
-# --- Load and encode background image from static folder ---
-with open("static/background.png", "rb") as image_file:
-    encoded = base64.b64encode(image_file.read()).decode()
+# --- Load and encode background and rider image ---
+with open("static/background.png", "rb") as bg:
+    bg_encoded = base64.b64encode(bg.read()).decode()
+
+with open("static/bike_rider.png", "rb") as bike:
+    bike_encoded = base64.b64encode(bike.read()).decode()
 
 # --- Inject custom CSS ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
-        background-image: url("data:image/png;base64,{encoded}");
+        background-image: url("data:image/png;base64,{bg_encoded}");
         background-size: cover;
-        background-position: center 75%;
+        background-position: center 35%;
         background-repeat: no-repeat;
     }}
 
@@ -31,47 +35,38 @@ st.markdown(f"""
         color: white;
     }}
 
-    h1 {{
-        font-size: 2.7rem;
-        text-align: center;
+    .bike-animation {{
+        position: fixed;
+        bottom: 100px;
+        left: -200px;
+        z-index: 9999;
+        animation: ride 4s linear infinite;
+    }}
+
+    @keyframes ride {{
+        0% {{ left: -200px; }}
+        100% {{ left: 110%; }}
+    }}
+
+    .generating-text {{
+        position: fixed;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        font-weight: bold;
         color: white;
-        margin-bottom: 1.5rem;
+        z-index: 9999;
+        animation: pulse 1.5s ease-in-out infinite;
     }}
 
-    label, .stTextInput label, .stSelectbox label {{
-        font-weight: bold;
-        color: white !important;
-        opacity: 1 !important;
+    @keyframes pulse {{
+        0%, 100% {{ opacity: 1; }}
+        50% {{ opacity: 0.3; }}
     }}
 
-    .stSlider label, .stSlider span {{
-        color: white !important;
-        opacity: 1 !important;
-        font-weight: bold;
-    }}
-
-    .stButton>button {{
-        background-color: #ff8000;
-        color: white;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
-        font-size: 1.1rem;
-    }}
-
-    .stButton>button:hover {{
-        background-color: #ffa733;
-    }}
-
-    .stDownloadButton>button {{
-        margin-top: 1rem;
-        background-color: #00b7ff;
-        color: white;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        padding: 0.6rem 1.2rem;
+    .stSpinner {{
+        visibility: hidden;
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -85,8 +80,23 @@ clips = st.slider("Number of clips", 1, 100, 5)
 aspect = st.selectbox("Aspect ratio", ["16:9", "1:1", "9:16"])
 
 if st.button("Generate Video"):
+    # Show the animated biker + text manually before running the spinner
+    st.markdown(f"""
+        <div class="bike-animation">
+            <img src="data:image/png;base64,{bike_encoded}" height="80">
+        </div>
+        <div class="generating-text">Generating...</div>
+    """, unsafe_allow_html=True)
+
     with st.spinner("Generating..."):
+        time.sleep(1.5)  # short delay to let animation appear
         output = make_video(topic, duration, clips, aspect)
+
+    st.markdown(
+        """<style>.bike-animation, .generating-text { display: none !important; }</style>""",
+        unsafe_allow_html=True
+    )
+
     if output:
         st.success("✅ Video created successfully!")
         st.video(output)
