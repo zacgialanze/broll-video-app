@@ -1,68 +1,52 @@
-
 import streamlit as st
 from broll_stitcher_core import make_video
+import base64
 
-st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
-st.markdown("""
-<style>
-body {
-    background-color: #0d1b2a;
-    color: #ffffff;
-}
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 36px;
-    color: #fca311;
-    text-align: center;
-}
-.stTextInput>div>div>input {
-    background-color: #1b263b;
-    color: white;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 16px;
-}
-.stSlider {
-    background-color: #1b263b;
-    padding: 10px;
-    border-radius: 10px;
-}
-.stSelectbox>div>div {
-    background-color: #1b263b;
-    color: white;
-    border-radius: 10px;
-    padding: 10px;
-}
-.stButton>button {
-    background-color: #fca311;
-    color: #14213d;
-    border: none;
-    padding: 10px 24px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 10px;
-}
-.stButton>button:hover {
-    background-color: #ffba08;
-    color: black;
-}
-</style>
-""", unsafe_allow_html=True)
+st.set_page_config(
+    page_title="101VideoGenerator App 1.0",
+    page_icon="🎬",
+    layout="centered"
+)
 
-st.title("🚀 101VideoGenerator App 1.0")
+# Inject custom CSS to set the background image
+def set_background(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded = base64.b64encode(image_file.read()).decode()
+    css = f"""
+    <style>
+    .stApp {{
+        background-image: url("data:image/png;base64,{encoded}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }}
+    .stTextInput > div > div > input,
+    .stSelectbox > div > div > div,
+    .stSlider > div {{
+        background-color: rgba(255,255,255,0.8);
+        border-radius: 5px;
+        padding: 5px;
+    }}
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+
+set_background("assets/background.png")
+
+st.title("🎬 101VideoGenerator App 1.0")
 
 topic = st.text_input("Enter topic", "fish")
-duration = st.slider("Total duration (seconds)", 10, 120, 30)
+duration = st.slider("Duration (seconds)", 10, 120, 30)
 clips = st.slider("Number of clips", 1, 10, 5)
 aspect = st.selectbox("Aspect Ratio", ["16:9", "1:1", "9:16"])
 
-if st.button("🎬 Generate Video"):
-    with st.spinner("Generating your masterpiece..."):
+if st.button("Generate Video"):
+    with st.spinner("Generating..."):
         output = make_video(topic, duration, clips, aspect)
     if output:
-        st.success("✅ Video created successfully!")
+        st.success("Video created successfully!")
         st.video(output)
         with open(output, "rb") as f:
             st.download_button("📥 Download Video", f, file_name="highlight.mp4", mime="video/mp4")
     else:
-        st.error("❌ Failed to create video. Try a different topic.")
+        st.error("Failed to create video. Try a different topic.")
