@@ -5,14 +5,20 @@ import time
 
 st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 
-# --- Load and encode background and bike image ---
+# --- Load and encode images & sound ---
 with open("static/background.png", "rb") as bg:
     bg_encoded = base64.b64encode(bg.read()).decode()
 
 with open("static/bike_rider.png", "rb") as bike:
     bike_encoded = base64.b64encode(bike.read()).decode()
 
-# --- Inject CSS for background, bike, sparks ---
+with open("static/spark_trail.png", "rb") as spark:
+    spark_encoded = base64.b64encode(spark.read()).decode()
+
+with open("static/bike_loop.mp3", "rb") as audio:
+    audio_encoded = base64.b64encode(audio.read()).decode()
+
+# --- Inject CSS + JS for animation ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
@@ -45,36 +51,25 @@ st.markdown(f"""
 
     .spark-trail {{
         position: fixed;
-        bottom: 25px;
-        left: -300px;
+        bottom: 35px;
+        left: -320px;
         z-index: 9998;
-        width: 60px;
-        height: 60px;
-        background: radial-gradient(circle, orange 0%, transparent 70%);
-        border-radius: 50%;
-        box-shadow:
-            5px 0 orange,
-            -5px 0 orange,
-            0 5px orange,
-            0 -5px orange,
-            3px 3px orange,
-            -3px -3px orange;
-        opacity: 0.8;
-        animation: trail 5s linear infinite, flicker 0.1s infinite alternate;
+        animation: ride 5s linear infinite;
+    }}
+
+    .spark-trail img {{
+        height: 40px;
+        opacity: 0.85;
+        animation: flicker 0.15s infinite alternate;
     }}
 
     @keyframes ride {{
-        0% {{ left: -300px; }}
+        0% {{ left: -320px; }}
         100% {{ left: 110%; }}
     }}
 
-    @keyframes trail {{
-        0% {{ left: -330px; }}
-        100% {{ left: 80%; }}
-    }}
-
     @keyframes flicker {{
-        0% {{ transform: scale(1); opacity: 0.7; }}
+        0% {{ transform: scale(1); opacity: 0.6; }}
         100% {{ transform: scale(1.2); opacity: 1; }}
     }}
 
@@ -94,10 +89,6 @@ st.markdown(f"""
         0%, 100% {{ opacity: 1; }}
         50% {{ opacity: 0.3; }}
     }}
-
-    .stSpinner {{
-        visibility: hidden;
-    }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -110,28 +101,34 @@ clips = st.slider("Number of clips", 1, 100, 5)
 aspect = st.selectbox("Aspect ratio", ["16:9", "1:1", "9:16"])
 
 if st.button("Generate Video"):
-    # Inject animated bike + sparks + text
+    # Inject animation, spark, and sound
     st.markdown(f"""
         <div class="bike-animation">
             <img src="data:image/png;base64,{bike_encoded}" height="110">
         </div>
-        <div class="spark-trail"></div>
+        <div class="spark-trail">
+            <img src="data:image/png;base64,{spark_encoded}">
+        </div>
         <div class="generating-text">Generating...</div>
+        <audio id="bike-audio" autoplay loop>
+            <source src="data:audio/mp3;base64,{audio_encoded}" type="audio/mp3">
+        </audio>
     """, unsafe_allow_html=True)
 
     with st.spinner("Generating..."):
         time.sleep(1.5)
         output = make_video(topic, duration, clips, aspect)
 
-    # Hide everything post-generation
-    st.markdown(
-        """<style>
-        .bike-animation, .spark-trail, .generating-text {{
-            display: none !important;
-        }}
-        </style>""",
-        unsafe_allow_html=True
-    )
+    # Kill audio + visuals
+    st.markdown("""
+        <script>
+            const audio = document.getElementById('bike-audio');
+            if (audio) audio.pause();
+        </script>
+        <style>
+            .bike-animation, .spark-trail, .generating-text { display: none !important; }
+        </style>
+    """, unsafe_allow_html=True)
 
     if output:
         st.success("✅ Video created successfully!")
