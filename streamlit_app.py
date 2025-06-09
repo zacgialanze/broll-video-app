@@ -6,13 +6,17 @@ st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 # --- Inject custom CSS ---
 st.markdown("""
     <style>
-    body {
+    [data-testid="stAppViewContainer"] {
         background-image: url('assets/background.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        overflow-x: hidden;
     }
+
+    .stApp {
+        background: transparent;
+    }
+
     .block-container {
         background-color: rgba(0, 0, 0, 0.6);
         padding: 2rem 3rem;
@@ -21,16 +25,19 @@ st.markdown("""
         margin: 6vh auto;
         color: white;
     }
+
     h1 {
         font-size: 2.7rem;
         text-align: center;
         color: white;
         margin-bottom: 1.5rem;
     }
+
     label, .stTextInput label, .stSelectbox label {
         font-weight: bold;
         color: white;
     }
+
     .stButton>button {
         background-color: #ff8000;
         color: white;
@@ -40,9 +47,11 @@ st.markdown("""
         padding: 0.75rem 1.5rem;
         font-size: 1.1rem;
     }
+
     .stButton>button:hover {
         background-color: #ffa733;
     }
+
     .stDownloadButton>button {
         margin-top: 1rem;
         background-color: #00b7ff;
@@ -54,6 +63,7 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 # --- UI ---
 st.title("🎬 101VideoGenerator App 1.0")
