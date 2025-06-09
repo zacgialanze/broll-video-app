@@ -14,5 +14,8 @@ if st.button("Generate Video"):
     if output:
         st.success("Video created successfully!")
         st.video(output)
+        with open(output, "rb") as f:
+    st.download_button("📥 Download Video", f, file_name="highlight.mp4", mime="video/mp4")
+
     else:
         st.error("Failed to create video. Try a different topic.")
