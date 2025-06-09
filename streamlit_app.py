@@ -5,14 +5,14 @@ import time
 
 st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 
-# --- Load and encode background and rider image ---
+# --- Load and encode background and new rider image ---
 with open("static/background.png", "rb") as bg:
     bg_encoded = base64.b64encode(bg.read()).decode()
 
 with open("static/bike_rider.png", "rb") as bike:
     bike_encoded = base64.b64encode(bike.read()).decode()
 
-# --- Inject custom CSS ---
+# --- Inject CSS ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
@@ -37,20 +37,20 @@ st.markdown(f"""
 
     .bike-animation {{
         position: fixed;
-        bottom: 100px;
-        left: -200px;
+        bottom: 40px;
+        left: -300px;
         z-index: 9999;
-        animation: ride 4s linear infinite;
+        animation: ride 5s linear infinite;
     }}
 
     @keyframes ride {{
-        0% {{ left: -200px; }}
+        0% {{ left: -300px; }}
         100% {{ left: 110%; }}
     }}
 
     .generating-text {{
         position: fixed;
-        bottom: 60px;
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         font-size: 1.5rem;
@@ -80,18 +80,19 @@ clips = st.slider("Number of clips", 1, 100, 5)
 aspect = st.selectbox("Aspect ratio", ["16:9", "1:1", "9:16"])
 
 if st.button("Generate Video"):
-    # Show the animated biker + text manually before running the spinner
+    # Inject animated rider + text
     st.markdown(f"""
         <div class="bike-animation">
-            <img src="data:image/png;base64,{bike_encoded}" height="80">
+            <img src="data:image/png;base64,{bike_encoded}" height="110">
         </div>
         <div class="generating-text">Generating...</div>
     """, unsafe_allow_html=True)
 
     with st.spinner("Generating..."):
-        time.sleep(1.5)  # short delay to let animation appear
+        time.sleep(1.5)
         output = make_video(topic, duration, clips, aspect)
 
+    # Remove animation after completion
     st.markdown(
         """<style>.bike-animation, .generating-text { display: none !important; }</style>""",
         unsafe_allow_html=True
