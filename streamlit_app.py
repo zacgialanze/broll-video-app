@@ -3,34 +3,59 @@ from broll_stitcher_core import make_video
 
 st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 
-# Custom background CSS
+# --- Inject custom CSS ---
 st.markdown("""
     <style>
     body {
-        background-image: url("assets/background.png");
+        background-image: url('assets/background.png');
         background-size: cover;
         background-position: center;
+        background-repeat: no-repeat;
+        overflow-x: hidden;
     }
     .block-container {
         background-color: rgba(0, 0, 0, 0.6);
-        padding: 2rem;
+        padding: 2rem 3rem;
         border-radius: 1rem;
-        max-width: 700px;
-        margin: auto;
+        max-width: 650px;
+        margin: 6vh auto;
+        color: white;
     }
     h1 {
+        font-size: 2.7rem;
         text-align: center;
         color: white;
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
     label, .stTextInput label, .stSelectbox label {
+        font-weight: bold;
+        color: white;
+    }
+    .stButton>button {
+        background-color: #ff8000;
         color: white;
         font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+    }
+    .stButton>button:hover {
+        background-color: #ffa733;
+    }
+    .stDownloadButton>button {
+        margin-top: 1rem;
+        background-color: #00b7ff;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.2rem;
     }
     </style>
 """, unsafe_allow_html=True)
 
+# --- UI ---
 st.title("🎬 101VideoGenerator App 1.0")
 
 topic = st.text_input("Enter topic", "fish")
