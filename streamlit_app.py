@@ -8,7 +8,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# Inject custom CSS to set the background image
 def set_background(image_path):
     with open(image_path, "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
@@ -17,22 +16,54 @@ def set_background(image_path):
     .stApp {{
         background-image: url("data:image/png;base64,{encoded}");
         background-size: cover;
-        background-position: center;
+        background-position: top center;
         background-repeat: no-repeat;
+        color: #fff;
+        font-weight: bold;
+    }}
+    h1 {{
+        text-align: center;
+        font-size: 2.8rem;
+        color: white;
+        background-color: rgba(0,0,0,0.5);
+        padding: 0.5rem;
+        border-radius: 10px;
     }}
     .stTextInput > div > div > input,
-    .stSelectbox > div > div > div,
+    .stSelectbox > div > div,
     .stSlider > div {{
-        background-color: rgba(255,255,255,0.8);
-        border-radius: 5px;
-        padding: 5px;
+        background-color: rgba(255, 255, 255, 0.85) !important;
+        color: #000 !important;
+        border-radius: 10px;
+        padding: 6px 10px;
+    }}
+    button[kind="primary"] {{
+        background-color: #3366ff !important;
+        color: white !important;
+        font-weight: bold;
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin-top: 1rem;
+    }}
+    .stDownloadButton > button {{
+        background-color: #22bb33;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        margin-top: 10px;
+        padding: 8px 16px;
+    }}
+    .stSlider .css-1y4p8pa-efpxz3 {{
+        background-color: red !important;
     }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
 
+# Set background
 set_background("assets/background.png")
 
+# UI
 st.title("🎬 101VideoGenerator App 1.0")
 
 topic = st.text_input("Enter topic", "fish")
