@@ -8,13 +8,13 @@ st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 with open("static/background.png", "rb") as image_file:
     encoded = base64.b64encode(image_file.read()).decode()
 
-# --- Inject custom CSS ---
+# --- Inject CSS with left-positioned, zoomed-out image ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
         background-image: url("data:image/png;base64,{encoded}");
-        background-size: cover;
-        background-position: 42% center;
+        background-size: 150%;
+        background-position: left center;
         background-repeat: no-repeat;
     }}
 
