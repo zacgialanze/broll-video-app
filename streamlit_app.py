@@ -4,17 +4,17 @@ import base64
 
 st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 
-# --- Load background image from static folder and encode it ---
+# --- Load and encode background image from static folder ---
 with open("static/background.png", "rb") as image_file:
     encoded = base64.b64encode(image_file.read()).decode()
 
-# --- Inject custom CSS ---
+# --- Inject custom CSS with adjusted background position ---
 st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
         background-image: url("data:image/png;base64,{encoded}");
         background-size: cover;
-        background-position: center;
+        background-position: center top 20%;
         background-repeat: no-repeat;
     }}
 
