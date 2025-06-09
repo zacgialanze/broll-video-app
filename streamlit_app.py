@@ -13,8 +13,8 @@ st.markdown(f"""
     <style>
     [data-testid="stAppViewContainer"] {{
         background-image: url("data:image/png;base64,{encoded}");
-        background-size: 100%;
-        background-position: 40% 30%;
+        background-size: cover;
+        background-position: center 35%;
         background-repeat: no-repeat;
     }}
 
