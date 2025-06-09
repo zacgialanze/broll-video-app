@@ -1,44 +1,49 @@
 import streamlit as st
 from broll_stitcher_core import make_video
+import base64
 
 st.set_page_config(page_title="101VideoGenerator App 1.0", layout="centered")
 
+# --- Load background image from static folder and encode it ---
+with open("static/background.png", "rb") as image_file:
+    encoded = base64.b64encode(image_file.read()).decode()
+
 # --- Inject custom CSS ---
-st.markdown("""
+st.markdown(f"""
     <style>
-    [data-testid="stAppViewContainer"] {
-        background-image: url('/static/background.png');
+    [data-testid="stAppViewContainer"] {{
+        background-image: url("data:image/png;base64,{encoded}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-    }
+    }}
 
-    .stApp {
+    .stApp {{
         background: transparent;
-    }
+    }}
 
-    .block-container {
+    .block-container {{
         background-color: rgba(0, 0, 0, 0.6);
         padding: 2rem 3rem;
         border-radius: 1rem;
         max-width: 650px;
         margin: 6vh auto;
         color: white;
-    }
+    }}
 
-    h1 {
+    h1 {{
         font-size: 2.7rem;
         text-align: center;
         color: white;
         margin-bottom: 1.5rem;
-    }
+    }}
 
-    label, .stTextInput label, .stSelectbox label {
+    label, .stTextInput label, .stSelectbox label {{
         font-weight: bold;
         color: white;
-    }
+    }}
 
-    .stButton>button {
+    .stButton>button {{
         background-color: #ff8000;
         color: white;
         font-weight: bold;
@@ -46,13 +51,13 @@ st.markdown("""
         border-radius: 8px;
         padding: 0.75rem 1.5rem;
         font-size: 1.1rem;
-    }
+    }}
 
-    .stButton>button:hover {
+    .stButton>button:hover {{
         background-color: #ffa733;
-    }
+    }}
 
-    .stDownloadButton>button {
+    .stDownloadButton>button {{
         margin-top: 1rem;
         background-color: #00b7ff;
         color: white;
@@ -60,10 +65,9 @@ st.markdown("""
         border: none;
         border-radius: 8px;
         padding: 0.6rem 1.2rem;
-    }
+    }}
     </style>
 """, unsafe_allow_html=True)
-
 
 # --- UI ---
 st.title("🎬 101VideoGenerator App 1.0")
